@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Call Console: Water Consultation Booking (Portfolio Demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ground:#E7EDEE;
+  --panel:#FFFFFF;
+  --well:#0D2229;
+  --ink:#10222A;
+  --muted:#5C7078;
+  --line:#C9D6D9;
+  --teal:#0B6E72;
+  --teal-soft:#E0EFEF;
+  --rust:#A8481C;
+  --rust-soft:#F6E6DD;
+  --amber:#8A6410;
+  --amber-soft:#F5EDD8;
+
+  --sans:"Archivo Narrow","Helvetica Neue",Arial,sans-serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-0.01em}
+
+/* ---------- header ---------- */
+.masthead{
+  background:var(--well);
+  color:#DCE7E8;
+  padding:22px 28px 26px;
+}
+.masthead-inner{max-width:1180px;margin:0 auto}
+.brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.brand{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.22em;
+  text-transform:uppercase;
+  color:#6FA9AC;
+}
+.brand-sep{color:#33555C}
+.masthead h1{
+  font-family:var(--serif);
+  font-size:29px;
+  font-weight:500;
+  color:#FFFFFF;
+  margin-top:10px;
+  letter-spacing:-0.015em;
+}
+.masthead .sub{
+  color:#88A6AB;
+  font-size:14px;
+  margin-top:4px;
+  max-width:60ch;
+}
+
+/* ---------- pre-call card (signature) ---------- */
+.precall{
+  margin-top:20px;
+  background:#123039;
+  border:1px solid #23444D;
+  border-radius:3px;
+  padding:14px 16px;
+}
+.precall-label{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:#6FA9AC;
+  margin-bottom:10px;
+}
+.fields{display:flex;gap:12px;flex-wrap:wrap}
+.field{flex:1 1 170px;min-width:150px}
+.field label{
+  display:block;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:#7E9DA2;
+  margin-bottom:5px;
+}
+.field input{
+  width:100%;
+  background:#0A1D24;
+  border:1px solid #2C525B;
+  border-radius:2px;
+  color:#EAF3F4;
+  font-family:var(--sans);
+  font-size:15px;
+  padding:8px 10px;
+}
+.field input::placeholder{color:#4E7178}
+.field input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.precall-hint{
+  font-size:12.5px;
+  color:#7E9DA2;
+  margin-top:10px;
+}
+
+/* ---------- search ---------- */
+.searchwrap{margin-top:14px;position:relative}
+.searchwrap input{
+  width:100%;
+  background:#0A1D24;
+  border:1px solid #2C525B;
+  border-radius:2px;
+  color:#EAF3F4;
+  font-family:var(--sans);
+  font-size:16px;
+  padding:11px 90px 11px 12px;
+}
+.searchwrap input::placeholder{color:#557A81}
+.searchwrap input:focus{outline:2px solid var(--teal);outline-offset:1px;border-color:transparent}
+.kbd{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-size:10px;color:#557A81;
+  letter-spacing:0.08em;pointer-events:none;
+}
+
+/* ---------- layout ---------- */
+.shell{
+  max-width:1180px;
+  margin:0 auto;
+  padding:26px 28px 70px;
+  display:grid;
+  grid-template-columns:236px minmax(0,1fr);
+  gap:26px;
+  align-items:start;
+}
+
+/* ---------- rail ---------- */
+.rail{position:sticky;top:18px}
+.rail-group{margin-bottom:20px}
+.rail-group-title{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding:0 0 8px 2px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:6px;
+}
+.rail button{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:none;
+  border-left:2px solid transparent;
+  padding:7px 9px;
+  font-family:var(--sans);
+  font-size:15px;
+  color:var(--ink);
+  cursor:pointer;
+  border-radius:0 2px 2px 0;
+}
+.rail button:hover{background:#DCE5E7}
+.rail button:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+.rail button.on{background:var(--panel);border-left-color:var(--teal);font-weight:600}
+.rail .tag{
+  font-family:var(--mono);
+  font-size:10px;
+  color:var(--muted);
+  min-width:15px;
+}
+.rail button.on .tag{color:var(--teal)}
+
+/* ---------- panel ---------- */
+.panel{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:30px 34px 34px;
+  min-height:420px;
+}
+.panel[data-tone="caution"]{border-top:3px solid var(--rust)}
+.panel[data-tone="wait"]{border-top:3px solid var(--amber)}
+.panel[data-tone="go"]{border-top:3px solid var(--teal)}
+
+.eyebrow{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--teal);
+  margin-bottom:9px;
+}
+.panel[data-tone="caution"] .eyebrow{color:var(--rust)}
+.panel[data-tone="wait"] .eyebrow{color:var(--amber)}
+
+.panel h2{
+  font-family:var(--serif);
+  font-size:32px;
+  font-weight:500;
+  line-height:1.15;
+  letter-spacing:-0.02em;
+}
+.trigger{
+  font-size:15px;
+  color:var(--muted);
+  margin-top:9px;
+  max-width:66ch;
+}
+.rule{height:1px;background:var(--line);margin:24px 0}
+
+/* ---------- the say block (signature) ---------- */
+.say{
+  border-left:3px solid var(--teal);
+  background:#F4F9F9;
+  padding:15px 20px 17px;
+  margin:16px 0;
+}
+.say .marker{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--teal);
+  display:block;
+  margin-bottom:8px;
+}
+.say p{
+  font-family:var(--serif);
+  font-size:20px;
+  line-height:1.55;
+  margin:0 0 12px;
+  color:var(--ink);
+}
+.say p:last-child{margin-bottom:0}
+.say .beat{
+  font-family:var(--sans);
+  font-size:13.5px;
+  font-style:normal;
+  color:var(--muted);
+  display:block;
+  margin:-4px 0 12px;
+}
+.panel[data-tone="caution"] .say{border-left-color:var(--rust);background:var(--rust-soft)}
+.panel[data-tone="caution"] .say .marker{color:var(--rust)}
+.panel[data-tone="wait"] .say{border-left-color:var(--amber);background:var(--amber-soft)}
+.panel[data-tone="wait"] .say .marker{color:var(--amber)}
+
+/* filled variables */
+.var{
+  background:var(--teal-soft);
+  color:var(--teal);
+  padding:0 4px;
+  border-radius:2px;
+  font-family:var(--sans);
+  font-size:0.88em;
+  font-weight:600;
+}
+.var.empty{
+  background:#EDF1F2;
+  color:var(--muted);
+  border:1px dashed var(--line);
+}
+
+/* ---------- prose bits ---------- */
+.panel h3{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:28px 0 10px;
+}
+.panel p{margin:0 0 12px;max-width:70ch;font-size:15.5px}
+.panel ul,.panel ol{margin:0 0 14px;padding-left:20px;max-width:70ch}
+.panel li{margin-bottom:7px;font-size:15.5px}
+.warn{
+  border-left:3px solid var(--rust);
+  background:var(--rust-soft);
+  padding:12px 16px;
+  margin:16px 0;
+  font-size:15px;
+  max-width:70ch;
+}
+.warn strong{color:var(--rust)}
+
+/* why-it-works table */
+.mech{width:100%;border-collapse:collapse;margin:6px 0 4px;max-width:70ch}
+.mech td{
+  border-top:1px solid var(--line);
+  padding:9px 0;
+  vertical-align:top;
+  font-size:14.5px;
+}
+.mech td:first-child{
+  font-family:var(--mono);
+  font-size:12.5px;
+  color:var(--teal);
+  width:38%;
+  padding-right:18px;
+}
+
+/* ---------- routing buttons ---------- */
+.routes{display:flex;gap:9px;flex-wrap:wrap;margin-top:8px}
+.route{
+  font-family:var(--sans);
+  font-size:14.5px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:8px 13px;
+  cursor:pointer;
+  color:var(--ink);
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.route:hover{border-color:var(--teal);color:var(--teal)}
+.route:focus-visible{outline:2px solid var(--teal);outline-offset:1px}
+.route .arw{font-family:var(--mono);color:var(--muted);font-size:12px}
+.route:hover .arw{color:var(--teal)}
+
+/* ---------- objections ---------- */
+.objfilter{
+  width:100%;
+  max-width:520px;
+  background:#FBFCFC;
+  border:1px solid var(--line);
+  border-radius:2px;
+  padding:10px 12px;
+  font-family:var(--sans);
+  font-size:15px;
+  color:var(--ink);
+  margin-bottom:20px;
+}
+.objfilter:focus{outline:2px solid var(--teal);outline-offset:1px}
+.obj{border-top:1px solid var(--line);padding:18px 0 6px}
+.obj:first-of-type{border-top:none;padding-top:4px}
+.obj h4{
+  font-family:var(--serif);
+  font-size:20px;
+  font-weight:500;
+  margin-bottom:2px;
+}
+.obj .say{margin-top:12px}
+.obj .note{
+  font-size:14.5px;
+  color:var(--muted);
+  max-width:70ch;
+  margin:10px 0 4px;
+}
+.emptystate{
+  color:var(--muted);
+  font-size:15px;
+  padding:22px 0;
+  border-top:1px solid var(--line);
+}
+
+/* ---------- tally ---------- */
+.tally{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0 8px}
+.counter{
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:14px 16px;
+  min-width:132px;
+  flex:1 1 132px;
+  background:#FBFCFC;
+}
+.counter .cname{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.counter .cval{
+  font-family:var(--serif);
+  font-size:38px;
+  line-height:1.1;
+  margin:4px 0 8px;
+}
+.counter button{
+  font-family:var(--mono);
+  font-size:12px;
+  border:1px solid var(--line);
+  background:var(--panel);
+  border-radius:2px;
+  padding:5px 10px;
+  cursor:pointer;
+  color:var(--ink);
+  margin-right:5px;
+}
+.counter button:hover{border-color:var(--teal);color:var(--teal)}
+.ratio{
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--muted);
+  margin:12px 0 0;
+}
+.ratio b{color:var(--teal);font-weight:600}
+
+/* ---------- search results ---------- */
+.result{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:transparent;
+  border:none;
+  border-top:1px solid var(--line);
+  padding:13px 4px;
+  cursor:pointer;
+  font-family:var(--sans);
+}
+.result:hover{background:#F4F9F9}
+.result:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}
+.result .rwhere{
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--teal);
+}
+.result .rtitle{
+  font-family:var(--serif);
+  font-size:19px;
+  display:block;
+  margin-top:3px;
+}
+.result .rsnip{font-size:14px;color:var(--muted);display:block;margin-top:3px}
+
+/* ---------- motion ---------- */
+.panel{animation:rise .22s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .panel{animation:none}
+  *{transition:none!important}
+}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr;padding:20px 18px 60px;gap:18px}
+  .rail{position:static}
+  .rail-group{margin-bottom:14px}
+  .panel{padding:22px 20px 26px}
+  .panel h2{font-size:26px}
+  .say p{font-size:18px}
+  .masthead{padding:18px 18px 22px}
+  .masthead h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="brandrow">
+      <span class="brand">Water Treatment Sales</span>
+      <span class="brand brand-sep">/</span>
+      <span class="brand">Reactivation Desk &middot; Portfolio Demo</span>
+    </div>
+    <h1>Call Console</h1>
+    <p class="sub">Unsold quotes, 24+ months since we tested their water. Find what to say next in under two seconds.</p>
+
+    <div class="precall">
+      <div class="precall-label">Load the record before you dial</div>
+      <div class="fields">
+        <div class="field">
+          <label for="f-name">Customer first name</label>
+          <input id="f-name" type="text" placeholder="Karen" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="f-date">Date we came out</label>
+          <input id="f-date" type="text" placeholder="March 2024" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="f-source">Well or city</label>
+          <input id="f-source" type="text" placeholder="well" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="f-equip">What we found (if on file)</label>
+          <input id="f-equip" type="text" placeholder="often blank, that's fine" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="f-slot">Two open slots</label>
+          <input id="f-slot" type="text" placeholder="Tuesday afternoon or Thursday morning" autocomplete="off">
+        </div>
+      </div>
+      <p class="precall-hint">Name, date and well-or-city are all you actually need. The finding is a bonus, and when it's missing that becomes the reason for the call rather than a problem with it.</p>
+
+      <div class="searchwrap">
+        <input id="search" type="text" placeholder="What did they just say?  Try: too expensive, someone else, busy, my number" autocomplete="off">
+        <span class="kbd">press /</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="rail" id="rail" aria-label="Call sections"></nav>
+  <main id="panel" class="panel" tabindex="-1"></main>
+</div>
+
+<script>
+/* ============ state ============ */
+var vars = { name:"", equip:"", date:"", slot:"", source:"" };
+var tally = { dials:0, connects:0, booked:0 };
+var current = "prep";
+
+/* ============ content ============ */
+var NODES = {
+
+prep: {
+  group:"The call", key:"0", nav:"Before you dial", tone:"go",
+  eyebrow:"Setup", title:"Before you dial",
+  trigger:"Assume the record is thin. Sort the list on what's actually in it, not on what should have been.",
+  find:"prep research ticket quote sort segment list unsold setup well city priority",
+  body:[
+    {h:"What you can actually count on"},
+    {p:"Name, phone, address, the date we came out, and well or city about nine times out of ten. The old test result is a bonus that often isn't there, and the labeling was inconsistent back then. Build the call on the parts that are always present."},
+    {h:"Call the wells first"},
+    {p:"City customers can pull a free water quality report from the county whenever they want. Well owners can't. Nobody is treating their water upstream, the incidence of hardness, iron and sulfur is higher, and you are the only source of real numbers they have. Same dial, better odds."},
+    {ol:[
+      "<strong>Well, no results on file.</strong> Best pile. The missing data is your opener.",
+      "<strong>Well, results on file.</strong> Also strong. You get to name the number.",
+      "<strong>City water.</strong> Workable, lower priority.",
+      "<strong>Install or service on the ticket.</strong> Rare, and it gets a different opener entirely."
+    ]},
+    {h:"Two things to check before dialing"},
+    {ol:[
+      "<strong>Does the ticket show an install?</strong> If it does, use the equipment branch. Claiming we serviced a system we never sold ends the call and the record.",
+      "<strong>Well or city?</strong> One word, and it makes the whole call sound specific."
+    ]},
+    {warn:"<strong>Missing test results are not a problem to work around.</strong> They're the most honest reason you have to be calling today. See the opener."},
+    {routes:[["open","Go to the opener"],["f","Ticket shows our equipment"]]}
+  ]
+},
+
+open: {
+  group:"The call", key:"1", nav:"Opener", tone:"go",
+  eyebrow:"Every call starts here",
+  title:"The opener",
+  trigger:"They told us no once, or went quiet. Don't reopen the sale. Open the file, and be honest about what's in it.",
+  find:"opener open hello greeting first line start intro dont remember thin file",
+  body:[
+    {h:"Default opener · no results on file"},
+    {say:[
+      {t:"Hi, is this {name}?"},
+      {beat:"wait for confirmation"},
+      {t:"{name}, this is Daniel over at the water company. We came out to your place back in {date} and ran a water test on your {source}. Nothing's wrong, I'm going back through old appointments and yours is one where I don't have the numbers on file anymore. Do you remember what we found?"}
+    ]},
+    {p:"That last question is doing most of the work. It's true, it explains the call without pitching, and it puts them in the expert seat. If they remember the iron or the hardness, <strong>they</strong> just named the problem instead of you, and that is far more persuasive than anything you could have said."},
+    {h:"Why each piece is there"},
+    {mech:[
+      ["\"Is this {name}?\"","Sounds like someone who knows them, not a dialer."],
+      ["\"We came out to your place\"","True, specific, provable, and it's on every record. The only anchor you can always rely on."],
+      ["\"on your {source}\"","One word that makes the whole call sound like it came from a file rather than a list."],
+      ["\"Nothing's wrong\"","Pre-empts alarm."],
+      ["\"I don't have the numbers on file\"","Honest, unusual, and a real reason to be calling today. Nobody expects a salesman to admit a gap."],
+      ["\"Do you remember what we found?\"","Open question, flatters their memory, and lets them state the problem in their own words."]
+    ]},
+    {h:"If the results are in the file"},
+    {say:[
+      {t:"{name}, this is Daniel over at the water company. We came out and tested your {source} back in {date}. Nothing's wrong, I'm just going back through old test results. Real quick, did you ever end up doing anything about the {equip}?"}
+    ]},
+    {p:"Stronger when you have it. Only use it when the number is actually on screen, because if they ask what it was and you can't answer, you've undone the specificity that made it work."},
+    {h:"Their answer routes the call"},
+    {routes:[
+      ["a","\u201CI don't remember\u201D or \u201Cnever got to it\u201D"],
+      ["comp","\u201CWe went with someone else\u201D"],
+      ["b","\u201CIt's been fine\u201D"],
+      ["c","\u201CNot interested\u201D"],
+      ["e","Wrong person answered"],
+      ["g","Voicemail"]
+    ]},
+    {warn:"<strong>Never say:</strong> \"How are you today.\" \"I'm offering.\" \"Free\" (not yet). \"Are you interested.\" And never say we serviced or installed anything unless the ticket says we did."}
+  ]
+},
+
+a: {
+  group:"The call", key:"2", nav:"A · Don't recall / never acted", tone:"go",
+  eyebrow:"Branch A",
+  title:"\u201CI don't remember\u201D or \u201CWe never got around to it\u201D",
+  trigger:"Your best branch, and the two answers land in the same place: there is no current data on that house and nothing was ever done about it.",
+  find:"dont remember never did anything didnt do it still have problem no action nothing yet forgot procrastinated",
+  body:[
+    {h:"If they don't remember"},
+    {say:[
+      {t:"No worries, that's most people. Two years is a long time and honestly the numbers move anyway, especially on a {source}."}
+    ]},
+    {h:"If they remember and never acted"},
+    {say:[
+      {t:"That's what I figured. And that reading's two years old now, so it's probably not even accurate anymore."}
+    ]},
+    {h:"Both roads lead here"},
+    {say:[
+      {t:"What I'll do is send a specialist out to run a fresh panel. Hardness, iron, pH, chlorides, TDS, chlorine, and he'll look over your plumbing while he's there. About an hour, no charge. I've got {slot}. Which is easier?"}
+    ]},
+    {warn:"<strong>Alternative choice, never yes-or-no.</strong> \"Which is easier\" gets you a day. \"Would you like to schedule\" gets you the same answer they gave us in {date}."},
+    {p:"Do not re-pitch the old quote, and do not guess at what the old numbers were. The old quote is the thing they already said no to, and a number you can't source is a number they can catch you on."},
+    {routes:[["book","They said yes"],["obj","They pushed back"]]}
+  ]
+},
+
+comp: {
+  group:"The call", key:"3", nav:"B · Bought elsewhere", tone:"wait",
+  eyebrow:"Branch B",
+  title:"\u201CWe went with someone else\u201D",
+  trigger:"Common on an unsold list, and not a dead end. Be gracious, then offer the one thing their installer can't give them: a neutral test.",
+  find:"went with someone else competitor bought elsewhere another company already installed different company",
+  body:[
+    {say:[
+      {t:"Good, I'm glad you got it handled. Who'd you end up going with?"},
+      {beat:"listen, and log the answer, it's worth knowing"},
+      {t:"Honestly the test might be more useful to you now than it was back then. It tells you whether the system you paid for is doing what they said it would. We wouldn't touch their equipment or service it, you'd just have independent numbers on your own water."},
+      {beat:"then the ask"},
+      {t:"About an hour, no charge. I've got {slot}. Which is easier?"}
+    ]},
+    {warn:"<strong>Do not run down the competitor.</strong> They chose that company. Criticizing the choice criticizes them, and the call ends. \"Independent numbers on your own water\" does all the work you need."},
+    {routes:[["book","They said yes"],["obj","They pushed back"],["d","They're done"]]}
+  ]
+},
+
+b: {
+  group:"The call", key:"4", nav:"C · \"It's been fine\"", tone:"go",
+  eyebrow:"Branch C",
+  title:"\u201CIt's been fine\u201D",
+  trigger:"They never acted and they've made peace with it. Don't tell them they're wrong. Offer to confirm they're right.",
+  find:"fine no issues everything good water is fine used to it doesnt bother us nothing wrong",
+  body:[
+    {say:[
+      {t:"Good, that's what I like to hear, and honestly that's most of these calls. The only reason I'd still send someone is that whatever we measured in {date} is two years stale now, and on a {source} hardness and iron do move. The test tells you in about twenty minutes whether anything's changed."},
+      {t:"No charge, and there's nothing you have to do with the results. I've got {slot}. Which works better?"}
+    ]},
+    {p:"You are not claiming anything is wrong. You're offering to verify what they just told you, which is a far easier yes than admitting a problem they've decided to live with."},
+    {routes:[["book","They said yes"],["obj","They pushed back"],["c","They shut it down"]]}
+  ]
+},
+
+c: {
+  group:"The call", key:"5", nav:"D · \"Not interested\"", tone:"caution",
+  eyebrow:"Branch D",
+  title:"\u201CNot interested\u201D in the first ten seconds",
+  trigger:"Your biggest leak. This is a reflex, not a decision. They said it before processing who you are.",
+  find:"not interested no thanks reflex hang up ten seconds brush off",
+  body:[
+    {h:"One deflection. Only one."},
+    {say:[
+      {t:"Totally fair, and I'm not selling you anything today. We came out to your place back in {date} and ran a water test, and I'm just closing out old files. Did you ever end up doing anything about the water?"}
+    ]},
+    {p:"This disarms the pitch assumption head-on, hands them the date as proof they didn't hear the first time, and ends on a question that's easy to answer. The date is on every record, so this line works even when the file is empty."},
+    {warn:"<strong>Do not deflect twice.</strong> A second push converts almost nothing and burns the record permanently. This list already told us no once. Protect what's left of it."},
+    {routes:[["a","They answered, never handled it"],["comp","They bought elsewhere"],["b","They answered, all fine"],["d","They repeated the no"]]}
+  ]
+},
+
+d: {
+  group:"The call", key:"6", nav:"E · Hard no", tone:"caution",
+  eyebrow:"Branch E",
+  title:"Second refusal or hard no",
+  trigger:"They've said it twice, or they've asked not to be called. Exit clean.",
+  find:"hard no stop calling remove me do not call dnc take me off list angry",
+  body:[
+    {say:[
+      {t:"No problem at all, I'll leave you alone. If anything changes with the water, we're here. Have a good one."}
+    ]},
+    {p:"Log the outcome. No parting question. No \"before I let you go.\""},
+    {h:"If they say don't call again"},
+    {say:[
+      {t:"Absolutely, I'll get you removed right now. Sorry to have bothered you."}
+    ]},
+    {p:"Then log it as do-not-contact <em>on the call</em>, not at end of day. Confirm that the do-not-contact note actually feeds the company's suppression list."}
+  ]
+},
+
+e: {
+  group:"The call", key:"7", nav:"F · Spouse or gatekeeper", tone:"go",
+  eyebrow:"Branch F",
+  title:"Not the homeowner, or the spouse answered",
+  trigger:"Someone picked up who isn't the name on the ticket.",
+  find:"spouse wife husband gatekeeper not homeowner renter wrong person other half",
+  body:[
+    {say:[
+      {t:"No worries. Are you also on the account for the water system?"},
+      {beat:"then"},
+      {t:"Is {name} around, or is there a better time to catch you both? For this one it's best if you're both there, only because the recommendations usually involve a decision and I'd rather not make you relay it."}
+    ]},
+    {warn:"<strong>Never book with one spouse if you can get both.</strong> One-spouse appointments produce \"let me talk to my husband\" and a dead job."},
+    {h:"If unavailable"},
+    {say:[
+      {t:"What's usually a better window for you both, evenings or weekends?"}
+    ]},
+    {p:"Log the callback time and actually call then. A promised callback you don't make is worse than no callback, because the next dial starts in the hole."},
+    {routes:[["open","Restart with the homeowner"],["book","Both are on the line"]]}
+  ]
+},
+
+f: {
+  group:"The call", nav:"Rare · They have our equipment", tone:"go",
+  eyebrow:"Off-list branch",
+  title:"The ticket shows an install or service",
+  trigger:"A minority of these records are real customers. Only use this opener when the ticket proves it.",
+  find:"our equipment installed customer serviced install real customer bought from us",
+  body:[
+    {say:[
+      {t:"Hi, is this {name}? ... {name}, this is Daniel over at the water company. We took care of your system back in {date}. Nothing's wrong, I'm just the one who checks in on systems coming up past due. Real quick, how's it been running for you?"}
+    ]},
+    {p:"From here it's the same tree. An issue routes to A, \"it's fine\" routes to C, a brush-off routes to D. The only difference is that you get to say we installed it, which is the strongest opener you have. Just make sure it's true."},
+    {warn:"<strong>Check the ticket, don't assume.</strong> Saying \"we took care of your system\" to someone we only ever quoted is the fastest way to end a call and lose a record for good."},
+    {routes:[["a","There's an issue"],["b","\u201CIt's been fine\u201D"],["c","Brush-off"]]}
+  ]
+},
+
+g: {
+  group:"The call", key:"8", nav:"G · Voicemail", tone:"wait",
+  eyebrow:"Branch G",
+  title:"Voicemail",
+  trigger:"Short, named, no offer. The goal is recognition on your next dial, not a callback.",
+  find:"voicemail vm message answering machine no answer left message",
+  body:[
+    {say:[
+      {t:"Hi {name}, Daniel calling from the water company. We came out and tested your {source} back in {date}, and I'm going back through old appointments. Nothing urgent. I'll try you again in a couple of days. Thanks."}
+    ]},
+    {h:"Assume no callback"},
+    {p:"Your callback rate is almost certainly low single digits. The voicemail's real job is that when you dial again in two or three days, you're a name they've heard instead of an unknown number."},
+    {p:"Do not put the finding or the offer in the voicemail. If they hear the pitch on the machine they've already decided before you ever reach them, and you've spent your one piece of leverage on an answering machine."},
+    {p:"Three attempts total, two to three days apart, then rest the record for sixty days."},
+    {routes:[["open","Next record"]]}
+  ]
+},
+
+obj: {
+  group:"Reference", key:"9", nav:"Objection library",
+  eyebrow:"Reference",
+  title:"Objection library",
+  trigger:"Find it, say it, get back to the ask. Filter below or use the search bar up top.",
+  find:"objection objections pushback rebuttal",
+  objections:true
+},
+
+book: {
+  group:"Reference", nav:"Booking mechanics", tone:"go",
+  eyebrow:"They said yes",
+  title:"Booking mechanics",
+  trigger:"Don't celebrate and hang up. Lock it down while you have them.",
+  find:"booking book appointment schedule lock confirm address both homeowners",
+  body:[
+    {ol:[
+      "<strong>Confirm both homeowners.</strong> \"And will your husband/wife be there too? It's better if you're both there since the recommendations usually involve a decision.\"",
+      "<strong>Set the time expectation honestly.</strong> \"Plan on about an hour, sometimes a little more if the system needs a closer look.\"",
+      "<strong>Read the address back</strong> out loud from the ticket.",
+      "<strong>Get the best cell number</strong> and confirm it's good for a call or text.",
+      "<strong>Tell them what to have ready.</strong> \"If you can just make sure he can get to the system and to an outside spigot, that's all he needs.\"",
+      "<strong>Name the next contact.</strong> \"You'll hear from me the day before to confirm, and the tech will call about thirty minutes out.\""
+    ]},
+    {p:"Book inside two weeks whenever you can. Show rate falls off the further out you go, and only completed visits count."},
+    {routes:[["confirm","Set the confirmation call"]]}
+  ]
+},
+
+confirm: {
+  group:"Reference", nav:"24-hour confirmation", tone:"go",
+  eyebrow:"Do this every time",
+  title:"The 24-hour confirmation call",
+  trigger:"Only completed consultations count. The tech's thirty-minute heads-up is not a confirmation, it's a warning shot.",
+  find:"confirmation confirm reminder no show noshow day before cancel reschedule",
+  body:[
+    {p:"By the time the tech calls thirty minutes out, a no-show is already a no-show. Your own call the day before is the cheapest insurance you have."},
+    {say:[
+      {t:"Hi {name}, Daniel with the water company. Just confirming the specialist for tomorrow at your time. Still good on your end?"}
+    ]},
+    {h:"If they hesitate at all"},
+    {say:[
+      {t:"No problem at all, what day next week is better?"}
+    ]},
+    {warn:"<strong>A rescheduled appointment counts. A no-show counts for nothing.</strong> Never talk someone into keeping a slot they've gone cold on, move it instead."},
+    {routes:[["track","Log the numbers"]]}
+  ]
+},
+
+track: {
+  group:"Discipline", nav:"Session tally",
+  eyebrow:"Discipline",
+  title:"Four numbers, every day",
+  trigger:"Right now you measure one in fifteen without knowing whether that's per dial or per connect. Those are two different problems with two different fixes.",
+  find:"track tally metrics numbers dials connects bookings rate stats",
+  tally:true
+},
+
+
+};
+
+var OBJECTIONS = [
+  {
+    q:"How much does it cost?",
+    find:"cost price how much charge free money expensive pay",
+    say:["Nothing. The test and the walkthrough are no charge. If he finds something worth addressing he'll lay out your options, and whether you do anything with that is completely up to you."],
+    note:"Say the second sentence. Don't pretend nobody will ever recommend anything, because they will. Pretending otherwise is what produces angry cancellations and no-shows."
+  },
+  {
+    q:"Is this a sales pitch?",
+    find:"sales pitch salesman selling upsell trying to sell scam",
+    say:["He's a specialist, not a salesman, but I'll be straight with you: if your system needs something, he's going to tell you what it costs. Most of these visits end with the customer being told everything looks fine."],
+    note:"Straight beats slick. People can hear a dodge, and the dodge is what makes them cancel later."
+  },
+  {
+    q:"I already have a system.",
+    find:"already have system softener installed got one existing equipment",
+    say:["Good, I'm glad you got it handled. This wouldn't touch it, we'd just run an independent panel on your water so you know whether it's actually keeping up. Two years is about when media starts to fall off, and the company that sold it to you isn't the one to ask."],
+    note:"On this list they almost certainly bought from someone else. Ask who, and log it. Never criticize the choice."
+  },
+  {
+    q:"Send me something in the mail or email.",
+    find:"mail email send information brochure literature mail me",
+    say:["I can do that, but the mailer won't tell you what's actually in your water, and that's the only useful part. The visit is the only way to get numbers on your specific system. Give me twenty minutes of a specialist's time on {slot} and you'll have real data."],
+    note:"If they insist, take the email, send it, and set a seven-day callback. Don't fight it twice."
+  },
+  {
+    q:"I'm too busy, call me later.",
+    find:"busy later bad time not now call back another time",
+    say:["Sure. I book out about two weeks. Is it this week specifically that's tough, or is scheduling in general rough right now?"],
+    note:"This separates a real timing problem from a soft brush-off. If it's real, book further out. If it's soft, you'll hear it in the answer."
+  },
+  {
+    q:"How did you get my number?",
+    find:"how did you get my number where did you get this number who gave you privacy",
+    say:["You gave it to us when we came out and tested your water back in {date}. It's on your file with us."],
+    note:"This objection dies instantly with a specific date and lives forever without one. Have the date on screen before you dial."
+  },
+  {
+    q:"You quoted me before and it was way too expensive.",
+    find:"expensive too much price quote was high couldnt afford cost too much last time",
+    say:["I remember that's how a lot of these went, and I'm not calling to run that quote again. It's two years old and so is the test it was based on. What I'd rather do is get you a current reading first, then you're at least deciding off real numbers instead of a stale sheet. The test itself doesn't cost anything."],
+    note:"This is the most honest objection on the list and the most common. Do not defend the old price and do not discount it on the phone. Move the conversation off the quote and onto the data."
+  },
+  {
+    q:"I'm renting now, or I sold the house.",
+    find:"rent renting sold house moved landlord tenant no longer live",
+    say:["Got it, thanks for telling me, I'll update the account. Do you happen to know if the system's still in the house?"],
+    note:"Log it and re-key or remove the record. A wrong-owner record you don't clean will waste another dial in six months."
+  },
+  {
+    q:"I'm on city water, I don't need it.",
+    find:"city water municipal county public water dont need treated",
+    say:["County water still carries chlorine and picks up hardness through the mains, and that's what your system is there to handle. The test is twenty minutes and it's free either way."],
+    note:"Don't over-argue the chemistry on the phone. One sentence, then back to the ask."
+  },
+  {
+    q:"Let me think about it.",
+    find:"think about it consider let me think maybe get back to you",
+    say:["Fair enough. The only reason I'd push at all is that there's no cost and no obligation on this one, so there's not much to think over. Want me to just hold {slot} and you can move it if something comes up?"],
+    note:"One soft assumptive attempt. If they still say no, set a callback date and get off the phone."
+  }
+];
+
+/* ============ rendering ============ */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function fill(text){
+  var map = {
+    name:{v:vars.name, ph:"first name"},
+    equip:{v:vars.equip, ph:"what we found"},
+    date:{v:vars.date, ph:"month, year"},
+    slot:{v:vars.slot, ph:"two open slots"},
+    source:{v:vars.source, ph:"well or city"}
+  };
+  return String(text).replace(/\{(name|equip|date|slot|source)\}/g, function(_, k){
+    var f = map[k];
+    if (f.v && f.v.trim()) return '<span class="var">' + esc(f.v.trim()) + '</span>';
+    return '<span class="var empty">' + f.ph + '</span>';
+  });
+}
+
+function sayBlock(lines){
+  var h = '<div class="say"><span class="marker">Say this</span>';
+  lines.forEach(function(l){
+    if (l.beat) { h += '<span class="beat">(' + esc(l.beat) + ')</span>'; }
+    if (l.t) { h += '<p>&ldquo;' + fill(l.t) + '&rdquo;</p>'; }
+  });
+  return h + '</div>';
+}
+
+function renderBody(blocks){
+  var h = "";
+  blocks.forEach(function(b){
+    if (b.h) h += '<h3>' + b.h + '</h3>';
+    if (b.p) h += '<p>' + fill(b.p) + '</p>';
+    if (b.say) h += sayBlock(b.say);
+    if (b.warn) h += '<div class="warn">' + fill(b.warn) + '</div>';
+    if (b.ol){ h += '<ol>'; b.ol.forEach(function(i){ h += '<li>' + fill(i) + '</li>'; }); h += '</ol>'; }
+    if (b.ul){ h += '<ul>'; b.ul.forEach(function(i){ h += '<li>' + fill(i) + '</li>'; }); h += '</ul>'; }
+    if (b.mech){
+      h += '<table class="mech"><tbody>';
+      b.mech.forEach(function(r){ h += '<tr><td>' + fill(r[0]) + '</td><td>' + fill(r[1]) + '</td></tr>'; });
+      h += '</tbody></table>';
+    }
+    if (b.routes){
+      h += '<div class="routes">';
+      b.routes.forEach(function(r){
+        h += '<button class="route" data-go="' + r[0] + '">' + esc(r[1]) + ' <span class="arw">&rarr;</span></button>';
+      });
+      h += '</div>';
+    }
+  });
+  return h;
+}
+
+function renderObjections(filterText){
+  var f = (filterText || "").toLowerCase().trim();
+  var list = OBJECTIONS.filter(function(o){
+    if (!f) return true;
+    return (o.q + " " + o.find + " " + o.say.join(" ") + " " + o.note).toLowerCase().indexOf(f) > -1;
+  });
+  var h = '<input class="objfilter" id="objfilter" type="text" placeholder="Filter objections…" value="' + esc(filterText || "") + '">';
+  if (!list.length){
+    h += '<div class="emptystate">Nothing matches that. Clear the filter to see all nine.</div>';
+    return h;
+  }
+  list.forEach(function(o){
+    h += '<div class="obj"><h4>&ldquo;' + esc(o.q) + '&rdquo;</h4>';
+    h += sayBlock(o.say.map(function(t){ return {t:t}; }));
+    if (o.note) h += '<p class="note">' + fill(o.note) + '</p>';
+    h += '</div>';
+  });
+  return h;
+}
+
+function renderTally(){
+  var h = '<div class="tally">';
+  [["dials","Dials"],["connects","Connects"],["booked","Booked"]].forEach(function(c){
+    h += '<div class="counter"><div class="cname">' + c[1] + '</div>'
+      + '<div class="cval">' + tally[c[0]] + '</div>'
+      + '<button data-inc="' + c[0] + '">+1</button>'
+      + '<button data-dec="' + c[0] + '">&minus;1</button></div>';
+  });
+  h += '</div>';
+
+  var cr = tally.dials ? Math.round(tally.connects / tally.dials * 100) : null;
+  var br = tally.connects ? (tally.booked ? (tally.connects / tally.booked).toFixed(1) : null) : null;
+  h += '<p class="ratio">Contact rate: <b>' + (cr === null ? "—" : cr + "%") + '</b>'
+     + ' &nbsp;·&nbsp; Bookings per connect: <b>' + (br === null ? "—" : "1 in " + br) + '</b></p>';
+
+  h += '<h3>Why both numbers</h3>'
+     + '<p>A low contact rate is a list and timing problem. Change when you dial and how many attempts each record gets.</p>'
+     + '<p>A healthy contact rate with few bookings is a conversation problem. That one lives in your opener, and it\'s the one worth working on first.</p>'
+     + '<p>Run the new opener for a full hundred dials before you change a word of it. Anything less and you\'re reading noise.</p>'
+     + '<div class="warn">This tally is for the current session only. It clears when you reload the page, so write the four numbers down on paper before you close it.</div>'
+     + '<div class="routes"><button class="route" data-reset="1">Reset session <span class="arw">&#8635;</span></button></div>';
+  return h;
+}
+
+function render(id, opts){
+  opts = opts || {};
+  var n = NODES[id];
+  if (!n) return;
+  current = id;
+  var p = document.getElementById("panel");
+  p.setAttribute("data-tone", n.tone || "");
+  var h = '<div class="eyebrow">' + esc(n.eyebrow) + '</div><h2>' + n.title + '</h2>';
+  if (n.trigger) h += '<p class="trigger">' + esc(n.trigger) + '</p>';
+  h += '<div class="rule"></div>';
+  if (n.objections) h += renderObjections(opts.filter);
+  else if (n.tally) h += renderTally();
+  else h += renderBody(n.body);
+  p.innerHTML = h;
+  paintRail();
+  if (!opts.quiet) p.focus();
+  if (opts.focusFilter){
+    var f = document.getElementById("objfilter");
+    if (f){ f.focus(); f.setSelectionRange(f.value.length, f.value.length); }
+  }
+}
+
+function buildRail(){
+  var groups = [];
+  Object.keys(NODES).forEach(function(id){
+    var n = NODES[id];
+    var g = groups.filter(function(x){ return x.name === n.group; })[0];
+    if (!g){ g = {name:n.group, items:[]}; groups.push(g); }
+    g.items.push({id:id, label:n.nav, key:n.key});
+  });
+  var h = "";
+  groups.forEach(function(g){
+    h += '<div class="rail-group"><div class="rail-group-title">' + esc(g.name) + '</div>';
+    g.items.forEach(function(it){
+      h += '<button data-go="' + it.id + '"><span class="tag">' + (it.key || "&middot;") + '</span>' + esc(it.label) + '</button>';
+    });
+    h += '</div>';
+  });
+  document.getElementById("rail").innerHTML = h;
+}
+
+function paintRail(){
+  var btns = document.querySelectorAll("#rail button");
+  for (var i = 0; i < btns.length; i++){
+    btns[i].classList.toggle("on", btns[i].getAttribute("data-go") === current);
+  }
+}
+
+/* ============ search ============ */
+function runSearch(q){
+  q = q.toLowerCase().trim();
+  var p = document.getElementById("panel");
+  if (!q){ render(current); return; }
+
+  var hits = [];
+  Object.keys(NODES).forEach(function(id){
+    var n = NODES[id];
+    var hay = (n.title + " " + (n.trigger||"") + " " + (n.find||"") + " " + (n.nav||"")).toLowerCase();
+    if (hay.indexOf(q) > -1) hits.push({go:id, where:n.group, title:n.title, snip:n.trigger || ""});
+  });
+  OBJECTIONS.forEach(function(o){
+    var hay = (o.q + " " + o.find + " " + o.say.join(" ")).toLowerCase();
+    if (hay.indexOf(q) > -1) hits.push({go:"obj", filter:o.q, where:"Objection", title:"\u201C" + o.q + "\u201D", snip:o.say[0].slice(0,110) + "\u2026"});
+  });
+
+  p.setAttribute("data-tone","");
+  var h = '<div class="eyebrow">Search</div><h2>' + hits.length + ' match' + (hits.length === 1 ? "" : "es") + '</h2>'
+        + '<p class="trigger">for &ldquo;' + esc(q) + '&rdquo;</p><div class="rule"></div>';
+  if (!hits.length){
+    h += '<div class="emptystate">Nothing matched. Try a word they actually said: cost, mail, busy, renting, city water, number.</div>';
+  } else {
+    hits.forEach(function(x){
+      h += '<button class="result" data-go="' + x.go + '"' + (x.filter ? ' data-filter="' + esc(x.filter) + '"' : '') + '>'
+         + '<span class="rwhere">' + esc(x.where) + '</span>'
+         + '<span class="rtitle">' + x.title + '</span>'
+         + '<span class="rsnip">' + esc(x.snip) + '</span></button>';
+    });
+  }
+  p.innerHTML = h;
+}
+
+/* ============ wiring ============ */
+document.addEventListener("click", function(e){
+  var t = e.target.closest ? e.target.closest("[data-go],[data-inc],[data-dec],[data-reset]") : null;
+  if (!t) return;
+  if (t.hasAttribute("data-go")){
+    var f = t.getAttribute("data-filter");
+    document.getElementById("search").value = "";
+    render(t.getAttribute("data-go"), f ? {filter:f} : {});
+  } else if (t.hasAttribute("data-inc")){
+    tally[t.getAttribute("data-inc")]++;
+    render("track", {quiet:true});
+  } else if (t.hasAttribute("data-dec")){
+    var k = t.getAttribute("data-dec");
+    if (tally[k] > 0) tally[k]--;
+    render("track", {quiet:true});
+  } else if (t.hasAttribute("data-reset")){
+    tally = {dials:0, connects:0, booked:0};
+    render("track", {quiet:true});
+  }
+});
+
+document.addEventListener("input", function(e){
+  if (e.target.id === "objfilter"){
+    render("obj", {filter:e.target.value, quiet:true, focusFilter:true});
+  }
+  if (["f-name","f-equip","f-date","f-slot","f-source"].indexOf(e.target.id) > -1){
+    vars.name  = document.getElementById("f-name").value;
+    vars.equip = document.getElementById("f-equip").value;
+    vars.date  = document.getElementById("f-date").value;
+    vars.slot  = document.getElementById("f-slot").value;
+    vars.source = document.getElementById("f-source").value;
+    var s = document.getElementById("search").value;
+    if (s.trim()) runSearch(s); else render(current, {quiet:true});
+  }
+  if (e.target.id === "search") runSearch(e.target.value);
+});
+
+document.addEventListener("keydown", function(e){
+  var tag = (e.target.tagName || "").toLowerCase();
+  var typing = tag === "input" || tag === "textarea";
+  if (e.key === "/" && !typing){
+    e.preventDefault();
+    document.getElementById("search").focus();
+    return;
+  }
+  if (e.key === "Escape"){
+    var s = document.getElementById("search");
+    if (s.value){ s.value = ""; render(current); }
+    s.blur();
+    return;
+  }
+  if (!typing && /^[0-9]$/.test(e.key)){
+    var target = null;
+    Object.keys(NODES).forEach(function(id){ if (NODES[id].key === e.key) target = id; });
+    if (target) render(target);
+  }
+});
+
+buildRail();
+render("prep", {quiet:true});
+</script>
+</body>
+</html>
